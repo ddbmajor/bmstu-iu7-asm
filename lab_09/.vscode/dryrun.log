@@ -1,0 +1,17 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/mnt/d/VUZ/bmstu-iu7-asm/lab_09'
+ 
+rm -fr ./out/
+mkdir -p out
+gcc -std=c99 -I./inc/ -Wall -Werror -O0 -fno-inline -masm=intel -m80387 -DX87 -c ./src/double_operations.c -o out/double_operations.o
+mkdir -p out
+gcc -std=c99 -I./inc/ -Wall -Werror -O0 -fno-inline -masm=intel -m80387 -DX87 -c ./src/long_double_operations.c -o out/long_double_operations.o
+mkdir -p out
+gcc -std=c99 -I./inc/ -Wall -Werror -O0 -fno-inline -masm=intel -m80387 -DX87 -c ./src/sin_func.c -o out/sin_func.o
+mkdir -p out
+gcc -std=c99 -I./inc/ -Wall -Werror -O0 -fno-inline -masm=intel -m80387 -DX87 -c ./src/main.c -o out/main.o
+mkdir -p out
+gcc -std=c99 -I./inc/ -Wall -Werror -O0 -fno-inline -masm=intel -m80387 -DX87 -c ./src/float_operations.c -o out/float_operations.o
+gcc -std=c99 -I./inc/ -Wall -Werror -O0 -fno-inline -masm=intel -m80387 -DX87 out/double_operations.o out/long_double_operations.o out/sin_func.o out/main.o out/float_operations.o -o appM80387 -lm
+make: Leaving directory '/mnt/d/VUZ/bmstu-iu7-asm/lab_09'
+ 

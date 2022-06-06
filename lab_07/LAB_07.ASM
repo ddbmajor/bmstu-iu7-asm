@@ -1,7 +1,3 @@
-; в комментариях пример
-; вызова системного обработчика
-; другим способом
-
 .MODEL TINY
 
 CODESEG SEGMENT
@@ -10,13 +6,12 @@ CODESEG SEGMENT
 main:
     jmp         init
     is_init     DW  1
-    sys_handler DD  0
+    handler     DD  0
     speed       DB  0
     cur_sec     DB  0
 
-cyclic09h proc
-    ; pushf
-    ; call CS:sys_handler
+cyc09 proc
+
     push AX
     push CX
     push DX
@@ -34,7 +29,7 @@ cyclic09h proc
     jbe set
 
     mov speed, 01Fh
-
+    
 set:
     mov AL, 0F3h
     out 60h, AL
@@ -45,10 +40,9 @@ to_pop:
     pop DX
     pop CX
     pop AX
-    jmp CS:sys_handler
-    ; без предыдущей строки
-    ; iret
-cyclic09h endp
+    jmp CS:handler
+
+cyc09 endp
 
 init:
     mov AX, 3509h
@@ -57,11 +51,11 @@ init:
     cmp ES:is_init, 1
     je exit
 
-    mov word ptr sys_handler, BX
-    mov word ptr sys_handler + 2, ES 
+    mov word ptr handler, BX
+    mov word ptr handler + 2, ES 
 
     mov AX, 2509h
-    mov DX, offset cyclic09h
+    mov DX, offset cyc09
     int 21h
 
     mov DX, offset init_msg
@@ -76,8 +70,8 @@ exit:
     push DX
     push DS
 
-    mov DX, word ptr ES:sys_handler
-    mov DS, word ptr ES:sys_handler + 2
+    mov DX, word ptr ES:handler
+    mov DS, word ptr ES:handler + 2
 
     mov AL, 0F3h
     out 60h, AL
@@ -98,8 +92,8 @@ exit:
     mov AH, 4Ch
     int 21h
 
-    init_msg    DB  "Installed$", 13, 10
-    exit_msg    DB  "Uninstalled$", 13, 10
+    init_msg    DB  "Install$", 13, 10
+    exit_msg    DB  "Uninstall$", 13, 10
 
 CODESEG ENDS
 END main
